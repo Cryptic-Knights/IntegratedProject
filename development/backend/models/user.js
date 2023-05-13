@@ -13,7 +13,11 @@ const wallet = new Schema({
 	networkType: {
 		// Network type that the wallet operates in
 		type: Schema.Types.String,
-	},
+    },
+    walletHoldings: {
+        // Number of coins that the wallet holds
+        type: Schema.Types.Decimal128,
+    }
 });
 
 const UserSchema = new Schema(
