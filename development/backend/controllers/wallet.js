@@ -1,0 +1,4 @@
+// addWallet
+// removeWallet
+// verifyWallet
+// fetchwalletinfo
