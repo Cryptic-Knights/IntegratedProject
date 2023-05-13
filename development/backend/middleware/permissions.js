@@ -13,9 +13,7 @@ const requiresAuth = async (req, res, next) => {
                 const user = await User.findById(userId);
 
                 if(user){
-                    const userToReturn = { ...user._doc}
-                    delete userToReturn.password;
-                    req.user = userToReturn;
+                    req.user = user;
                     isAuthed = true;
                 }
             } catch {

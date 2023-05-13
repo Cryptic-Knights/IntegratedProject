@@ -1,7 +1,7 @@
 const { Schema, model } = require("mongoose");
 
 const wallet = new Schema({
-	wallletaAddress: {
+	walletAddress: {
 		type: Schema.Types.String,
 	},
 
