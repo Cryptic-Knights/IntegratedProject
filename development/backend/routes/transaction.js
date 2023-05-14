@@ -5,7 +5,7 @@ const { send, history, getQr } = require("../controllers/transaction");
 const verifyWallet = require("../middleware/verifywallet");
 
 
-//  @route      POST /transaction/test
+//  @route      GET /transaction/test
 //  @Desc       Testing Route for /transaction
 //  @Access     Public
 router.get("/test", (req, res) => {

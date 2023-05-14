@@ -43,7 +43,7 @@ exports.signUp = async (req, res) => {
 		});
 
 		if (exsistingEmail) {
-			return res.status(400).json(returnError("Email already exsists"));
+			return res.status(400).json(returnError({ "email": "Email already exsists" }));
 		}
 
 		const hashedpassword = await bcrypt.hash(req.body.password, 12);
@@ -101,6 +101,9 @@ exports.logIn = async (req, res, next) => {
 		res.cookie("access-token", token, {
 			expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
 			httpOnly: true,
+			domain: "app.localhost",
+			path: "/",
+			SameSite: null,
 			secure: process.env.NODE_ENV === "production",
 		});
 
@@ -108,6 +111,7 @@ exports.logIn = async (req, res, next) => {
 		delete userToReturn.password;
 
 		data = { token: token, user: userToReturn, };
+		console.log("Login success");
 		return res.status(200).json(returnSuccess(data));
 	} catch (err) {
 		console.log(err);

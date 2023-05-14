@@ -10,6 +10,7 @@ const auth = require("./routes/auth");
 const transaction = require("./routes/transaction");
 const admin = require("./routes/admin");
 const wallet = require("./routes/wallet");
+const user =   require("./routes/user");
 
 //--------Application-----------
 const app = express();
@@ -18,7 +19,14 @@ const app = express();
 app.use(json());
 app.use(urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(cors());
+app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true,
+    })
+  );
+
+app.set("trust proxy", 2);
 
 
 //--------Routes----------------
@@ -26,6 +34,7 @@ app.use("/auth", auth);
 app.use("/transaction", transaction)
 app.use("/wallet", wallet);
 app.use("/admin", admin);
+app.use("/user", user);
 
 app.get("/test", (req, res) => {
     // res.status(200).send("Success the server is up and running")
