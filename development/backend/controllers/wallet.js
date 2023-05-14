@@ -81,7 +81,6 @@ const flagWallet = async (req, res) => {
 		const user = await User.findOne({
 			"walletids.wallets.walletAddress": walletAddress,
 		});
-
 		user.flagged = true;
 		await user.save()
         return res.status(200).json(returnSuccess("User Reported Successfully"));

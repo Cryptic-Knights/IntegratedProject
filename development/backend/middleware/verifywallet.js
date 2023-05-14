@@ -2,7 +2,7 @@ const validateWallet = require("../validators/walletVerification");
 const ReturnData = require("../returnStructure");
 
 
-const verifyWallet = async (req, res, next) => {
+exports.verifyWallet = async (req, res, next) => {
     const returnData = new ReturnData();
     const { isValid, errors }  = validateWallet(req.body);
 
@@ -14,5 +14,3 @@ const verifyWallet = async (req, res, next) => {
         return res.status(400).json(returnData.toJSON());
     }
 }
-
-module.exports = verifyWallet;

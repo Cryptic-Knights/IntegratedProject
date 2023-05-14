@@ -29,15 +29,11 @@ const transactionItem = new Schema({
 const transactionSchema = new Schema(
     {
         transactionId: {
-            type: Schema.Types.String,
-            required: true,
+            type: Schema.Types.ObjectId,
+            default: mongoose.Types.ObjectId,
         },
-        from: {
-            transactionUserData
-        },
-        to: {
-            transactionUserData
-        },
+        from: transactionUserData,
+        to: transactionUserData,
         item: {
             transactionItem
         },
