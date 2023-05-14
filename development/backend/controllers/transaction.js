@@ -114,5 +114,8 @@ const history = async (req, res, next) => {
 };
 
 // getQr for the user id
+const getQr = async (req, res) => {
+	res.status(200).send("The Qr route is yet to be setup");
+}
 
 module.exports = { send, history, getQr };

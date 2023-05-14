@@ -18,9 +18,10 @@ const returnSuccess = (data) => {
 // BanUser
 const banUser = async (req, res) => {
 	try {
-        const user = await User.findOne({ _id: req.userId });
+        const user = await User.findOne({ _id: req.body.userId });
 		user.banned = true;
 		user.flagged = false;
+		await user.save()
         return res.status(200).json(returnSuccess({ "user": user, "message" : "User banned successfully"}));
 	} catch (err) {
 		console.error(err);
@@ -31,8 +32,9 @@ const banUser = async (req, res) => {
 // unbanUser
 const unbanUser = async (req, res) => {
 	try {
-        const user = await User.findOne({ _id: req.userId });
+        const user = await User.findOne({ _id: req.body.userId });
 		user.banned = false;
+		await user.save()
         return res.status(200).json(returnSuccess({ "user": user, "message" : "User unbanned successfully"}));
 	} catch (err) {
 		console.error(err);
@@ -44,7 +46,7 @@ const unbanUser = async (req, res) => {
 const unflagWallet = async (req, res) => {
 	try {
 		const user = await User.findOne({
-			"walletids.wallets.walletAddress": walletAddress,
+			"walletids.wallets.walletAddress": req.body.walletId,
 		});
 
 		user.flagged = false;

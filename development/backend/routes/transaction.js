@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const requiresAuth = require("../middleware/permissions");
+const { requiresAuth } = require("../middleware/permissions");
 const { send, history, getQr } = require("../controllers/transaction");
 const verifyWallet = require("../middleware/verifywallet");
 

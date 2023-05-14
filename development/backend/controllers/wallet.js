@@ -27,6 +27,7 @@ const addWallet = async (req, res) => {
 			walletAddress: req.body.walletId,
 			walletType: req.body.coinType,
 			networkType: req.body.networkType,
+			// fetch balance somehow and add here
 		});
 
 		await user.save();
@@ -54,7 +55,7 @@ const removeWallet = async (req, res) => {
 const fetchWalletinfo = async (req, res) => {
 	try {
 		const user = await User.findOne({
-			"walletids.wallets.walletAddress": walletAddress,
+			"walletids.wallets.walletAddress": req.body.walletId,
 		}).select("name age walletids.wallets.$");
         return res.status(200).json(returnSuccess(user));
 	} catch (err) {
@@ -66,7 +67,10 @@ const fetchWalletinfo = async (req, res) => {
 const changeDefault = async (req, res) => {
     const user = req.user;
     const walletId = req.body.walletId;
-    try {
+	try {
+		if (user.walletids.defaultwallet == walletId) {
+			return res.status(400).json(returnError("Already the default account"));
+		}
         user.walletids.defaultwallet = walletId;
         await user.save();
         return res.status(200).json(returnSuccess("Default wallet changed successfully"));
@@ -79,7 +83,7 @@ const changeDefault = async (req, res) => {
 const flagWallet = async (req, res) => {
 	try {
 		const user = await User.findOne({
-			"walletids.wallets.walletAddress": walletAddress,
+			"walletids.wallets.walletAddress": req.body.walletId,
 		});
 		user.flagged = true;
 		await user.save()

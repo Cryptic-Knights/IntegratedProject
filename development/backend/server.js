@@ -10,7 +10,6 @@ const auth = require("./routes/auth");
 const transaction = require("./routes/transaction");
 const admin = require("./routes/admin");
 const wallet = require("./routes/wallet");
-const flag = require("./routes/flag");
 
 //--------Application-----------
 const app = express();
@@ -27,7 +26,6 @@ app.use("/auth", auth);
 app.use("/transaction", transaction)
 app.use("/wallet", wallet);
 app.use("/admin", admin);
-app.use("/flag", flag);
 
 app.get("/test", (req, res) => {
     // res.status(200).send("Success the server is up and running")

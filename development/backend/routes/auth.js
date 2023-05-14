@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { signUp, logIn } = require("../controllers/auth");
-const requiresAuth = require("../middleware/permissions");
+const {requiresAuth} = require("../middleware/permissions");
 
 //  @route      POST /auth/test
 //  @Desc       Testing Route

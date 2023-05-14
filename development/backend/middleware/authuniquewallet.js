@@ -17,27 +17,15 @@ const checkDuplicateWalletId  = async (req, res, next) => {
 		});
 
 		// Check if the wallet is already present in the database
-		User.findOne({
-			"walletids.wallets": {
-				$elemMatch: { walletId },
-			},
-		}).exec((err, user) => {
-			if (err) {
-				returnData.hasError = true;
-				returnData.error.push("Database error");
-				return res.status(500).json(returnData.toJSON());
-			}
-			if (user) {
+		const userOther = await User.findOne({ 'walletids.wallets.walletAddress': walletId });
+			if (userOther) {
                 returnData.hasError = true;
                 returnData.error.push("Wallet Address already exsists in database");
-                return res.status(401).json(returnData.toJSON());
+                return res.status(400).json(returnData.toJSON());
 			} else {
-
                 next();
 			}
-		});
-
-	} catch (error) {
+		}catch (error) {
         console.error(error);
         returnData.hasError = true;
         returnData.error.push(error.message);
