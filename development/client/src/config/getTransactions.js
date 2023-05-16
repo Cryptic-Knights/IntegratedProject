@@ -3,11 +3,11 @@
 
 import axios from "axios";
 
-export async function getUserinfo() {
+export async function getTransactions() {
 	let config_for_login = {
 		method: "get",
 		maxBodyLength: Infinity,
-		url: "http://localhost:5000/user/info",
+		url: "http://localhost:5000/transaction/history",
 		headers: {
 			"Content-Type": "application/json",
 		},
@@ -17,22 +17,9 @@ export async function getUserinfo() {
 
 	return axios
 		.request(config_for_login)
-		.then((response) => {
-		
-			// Handle success response from server
-			const defaultWalletObj = response.data.data.walletids.wallets.find(
-				(wallet) => wallet.walletAddress === response.data.data.walletids.defaultwallet
-			);
-			const data = {
-				name: response.data.data.name,
-				age: response.data.data.age,
-				defaultWalletObj: defaultWalletObj,
-				wallets: response.data.data.walletids.wallets,
-				banned: response.data.data.banned,
-				flagged: response.data.data.flagged,
-				isAdmin: response.data.data.isAdmin,	
-			}
-			return data;
+        .then((response) => {
+            console.log(response.data.data);
+			return response.data.data;
 		})
 		.catch((error) => {
 			// Handle error response from server

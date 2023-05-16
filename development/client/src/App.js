@@ -8,10 +8,15 @@ import LoginPage from "./pages/LoginPage";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import TradePage from "./pages/TradePage";
 
+import React, { Suspense } from "react";
+import { ErrorBoundary } from "./components/ErrorBoundary";
+import { Apploader } from "./components/Apploader";
+
 function App() {
 	return (
 		<Router>
 			<Header />
+
 			<Routes>
 				<Route
 					path="/"
@@ -24,7 +29,7 @@ function App() {
 				<Route
 					path="/register"
 					element={<LoginPage register />}
-				/> 
+				/>
 				<Route
 					path="/search"
 					Component={SearchPage}
@@ -39,7 +44,11 @@ function App() {
 				/>
 				<Route
 					path="/trade"
-					Component={TradePage}
+					element={
+						<ErrorBoundary fallback={<p>Error Fetching details</p>}>
+							<Suspense fallback={<Apploader />}><TradePage/></Suspense>
+						</ErrorBoundary>
+					}
 				/>
 				<Route
 					path="/coin/:id"

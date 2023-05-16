@@ -2,13 +2,11 @@ import axios from "axios";
 
 export function send(senderWallet, recieverWallet, amount) {
 	let data_for_login = JSON.stringify({
-		walletId: senderWallet,
+		senderWallet: senderWallet,
         recieverWallet: recieverWallet,
         amount: amount,
-        coinData: {
             coinId: 'BTC',
             coinName: 'bitcoin',
-        }
 	});
 
 	let config_for_login = {

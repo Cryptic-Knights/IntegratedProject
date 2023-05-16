@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
 const transactionUserData = new Schema({
-    walletid: {
+    walletId: {
         type: Schema.Types.String,
         required: true,
     }
@@ -29,15 +29,9 @@ const transactionItem = new Schema({
 
 const transactionSchema = new Schema(
     {
-        transactionId: {
-            type: Schema.Types.ObjectId,
-            default: mongoose.Types.ObjectId,
-        },
         from: transactionUserData,
         to: transactionUserData,
-        item: {
-            transactionItem
-        },
+        item: transactionItem,
         status: {
             type: Schema.Types.String,
             enum: ['Active', 'Completed', 'Terminated'],

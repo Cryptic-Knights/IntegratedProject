@@ -7,11 +7,26 @@ import {
 	faExchangeAlt,
 	faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
+import { useState, useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { useNavigate } from "react-router";
+import { getUserinfo } from "../config/getUser";
 
 function Header() {
-	const navigate = useNavigate();
+	const [loggedin, setLoggedin] = useState(false);
+
+	useEffect(() => {
+		// Fetch user data
+		getUserinfo()
+			.then((data) => {
+				if (data) {
+					setLoggedin(true);
+				}
+			})
+			.catch((error) => {
+				setLoggedin(false);
+			});
+	}, []);
+	
 	return (
 		<Navbar
 			bg="primary"
@@ -52,11 +67,13 @@ function Header() {
 						</Nav.Link>
 					</LinkContainer>
 				</Nav>
-				<Nav>
-					<LinkContainer to="/login">
-						<Button variant="light">Log In</Button>
-					</LinkContainer>
-				</Nav>
+				{!loggedin &&
+					<Nav>
+						<LinkContainer to="/login">
+							<Button variant="light">Log In</Button>
+						</LinkContainer>
+					</Nav>
+				}
 			</Navbar.Collapse>
 		</Navbar>
 	);

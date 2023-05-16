@@ -17,17 +17,14 @@ const returnSuccess = (data) => {
 
 const send = async (req, res, next) => {
 	const user = req.user;
-	const senderWallet = req.body.walletId;
+	const senderWallet = req.body.senderWallet;
 	const amount = req.body.amount;
 	const recieverWallet = req.body.recieverWallet;
-	const coinData = req.coinData;
-	const walletInfo = user.walletids.wallets.map((wallet) => {
-		if (wallet.walletAddress === walletAddress) {
-			return {
-				walletType: wallet.walletType,
-				networkType: wallet.networkType,
-				walletHoldings: wallet.walletHoldings,
-			};
+	const coinId = req.body.coinId;
+	const coinName = req.body.coinName;
+	const walletInfo = await user.walletids.wallets.map((wallet) => {
+		if (wallet.walletAddress == senderWallet) {
+			return wallet;
 		}
 	});
 
@@ -57,22 +54,29 @@ const send = async (req, res, next) => {
 		}
 
 		// Create the transaction object
+		console.log(req.body);
 		const transaction = new Transaction({
-			sender: {
-				userId: user._id,
+			from: {
 				walletId: senderWallet,
 			},
-			recipient: {
-				userId: reciever._id,
+			to: {
 				walletId: recieverWallet,
 			},
-			coinId: coinData.coinId,
-			coinName: coinData.coinName,
-            amount: amount,
-            status: 'Pending',
+			item: {
+				coinId: coinId,
+				coinName: coinName,
+				coinQuantity: amount,
+				coinValue: 1000.09,
+			},
+			status: "Completed",
 		});
+
 		// Update the sender's wallet balance
-		senderWallet.walletHoldings -= amount;
+		user.walletids.wallets.map((wallet) => {
+			if (wallet.walletAddress == walletInfo.walletAddress) {
+				wallet.walletHoldings -= amount;
+			}
+		});
 		await user.save();
 
 		// Update the recipient's wallet balance
@@ -80,12 +84,16 @@ const send = async (req, res, next) => {
 		await reciever.save();
 
 		// Save the transaction to the database
-        await transaction.save();
-        transaction.status = 'Completed';
-        await transaction.save();
-        
-        res.status(200).json(returnSuccess({ "status": Completed, "transaction": transaction }));
+		console.log(transaction);
+		await transaction.save();
+		// transaction.status = 'Completed';
+		// await transaction.save();
+
+		res.status(200).json(
+			returnSuccess({ status: "Completed", transaction: transaction })
+		);
 	} catch (err) {
+		console.log(err);
 		res.status(500).json(
 			returnError({
 				error: `Transaction could not be complete due to ${err.message}`,
@@ -97,25 +105,29 @@ const send = async (req, res, next) => {
 const history = async (req, res, next) => {
 	const user = req.user;
 	try {
-		// Iterate through each wallet in the user's `walletids` array
-		const transactionPromises = user.walletids.map(async (wallet) => {
-			const transactions = await Transaction.find({
-				"from.walletid": wallet.walletid,
-			}).sort({ createdAt: -1 });
-			return transactions;
+		const walletIds = user.walletids.wallets.map((wallet) => {
+			console.log(wallet);
+			return wallet.walletAddress;
 		});
 
-		// Wait for all promises to resolve and flatten the results into a single array
-		const transactions = await Promise.all(transactionPromises);
-		res.status(200).json(returnSuccess(transactions.flat()));
+		const transactions = await Transaction.find({
+			$or: [
+				{ "from.walletId": { $in: walletIds } },
+				{ "to.walletId": { $in: walletIds } },
+			],
+		})
+			.sort({ createdAt: -1 })
+			.exec();
+
+		res.status(200).json(returnSuccess(transactions));
 	} catch (err) {
-		res.send(500).json(returnError(err.message));
+		res.status(500).json(returnError(err.message));
 	}
 };
 
 // getQr for the user id
 const getQr = async (req, res) => {
 	res.status(200).send("The Qr route is yet to be setup");
-}
+};
 
 module.exports = { send, history, getQr };

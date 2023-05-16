@@ -24,7 +24,7 @@ exports.requiresAuth = async (req, res, next) => {
 	}
 
 	if (isAuthed) {
-		return next();
+		next();
 	} else {
 		res.status(401).send("UnAuthorised");
 	}

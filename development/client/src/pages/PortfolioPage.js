@@ -5,8 +5,6 @@ import axios from "axios";
 
 const data = [
   { id: "bitcoin", name: "Bitcoin", holdings: 2.5, costPrice: 54789.23 },
-  { id: "ethereum", name: "Ethereum", holdings: 10, costPrice: 2574.89 },
-  { id: "litecoin", name: "Litecoin", holdings: 50, costPrice: 200.45 },
 ];
 
 function numberWithCommas(x) {
@@ -15,7 +13,7 @@ function numberWithCommas(x) {
 
 function PortfolioPage() {
   const [holdings, setHoldings] = useState([]);
-  const [balance, setBalance] = useState(12500.0);
+  const [balance, setBalance] = useState();
   const [holdingsBalance, setHoldingsBalance] = useState(0);
   const [currency, symbol] = ["usd", "$"];
 
