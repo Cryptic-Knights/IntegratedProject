@@ -15,6 +15,7 @@ export function send(senderWallet, recieverWallet, amount) {
 		url: "http://localhost:5000/transaction/send",
 		headers: {
 			"Content-Type": "application/json",
+			"authorization": localStorage.getItem("token"),
 		},
         credentials: "include",
         withCredentials: true,

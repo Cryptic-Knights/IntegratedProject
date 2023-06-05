@@ -33,10 +33,11 @@ router.post("/login", logIn);
 //  Desc        Test Route to test user authorization
 //  Access      Private
 router.get("/current", requiresAuth, async (req, res) => {
+    console.log("Here" + req.user);
     if (!req.user) {
-        return res.status(401).json({ authority: "Unauthorized" });
+        return res.status(401).json({ "authority": "Unauthorized" });
     }
-    return res.status(200).json({ User: req.user });
+    return res.status(200).json({ "Success": "Authorization Successfull" });s
 });
 
 

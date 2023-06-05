@@ -10,6 +10,7 @@ export async function getTransactions() {
 		url: "http://localhost:5000/transaction/history",
 		headers: {
 			"Content-Type": "application/json",
+			"authorization": localStorage.getItem("token"),
 		},
 		credentials: "include",
 		withCredentials: true,

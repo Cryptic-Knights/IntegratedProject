@@ -2,37 +2,22 @@ const User = require("../models/user");
 const jwt = require("jsonwebtoken");
 
 exports.requiresAuth = async (req, res, next) => {
-	const token = req.cookies["access-token"];
-	let isAuthed = false;
+	const token = req.headers.authorization;
+	console.log(token);
 
-	if (token) {
-		try {
-			const { userId } = jwt.verify(token, process.env.JWT_SECRET);
-			try {
-				const user = await User.findById(userId);
-
-				if (user) {
-					req.user = user;
-					isAuthed = true;
-				}
-			} catch {
-				isAuthed = false;
-			}
-		} catch {
-			isAuthed = false;
-		}
+	try {
+		const { userId } = jwt.verify(token, process.env.JWT_SECRET);
+		const user = await User.findById(userId);
+		req.user = user;
+		console.log(jwt.verify(token, process.env.JWT_SECRET));
+	} catch (err) {
+		console.log(err);
 	}
-
-	if (isAuthed) {
-		next();
-	} else {
-		res.status(401).send("UnAuthorised");
-	}
+	next();
 };
-
 exports.requiresAdmin = async (req, res, next) => {
 	try {
-		const token = req.cookies["access-token"];
+		const token = req.headers.authorization;
 
 		if (token) {
 			const { userId } = jwt.verify(token, process.env.JWT_SECRET);
@@ -40,13 +25,14 @@ exports.requiresAdmin = async (req, res, next) => {
 			if (!user.isAdmin) {
 				throw new Error("Unauthorized access");
 			}
+			req.user = user; // Assign user to req.user for further access
 			next();
-        }
-        else {
-            res.status(401).send("UnAuthorised")
-        }
+		} else {
+			return res.status(401).send("Unauthorized");
+		}
 	} catch (err) {
 		console.error(err);
-		res.status(401).json({ error: "Unauthorised" });
+		return res.status(401).json({ error: "Unauthorized" });
 	}
 };
+

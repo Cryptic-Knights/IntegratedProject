@@ -98,24 +98,19 @@ exports.logIn = async (req, res, next) => {
 			expiresIn: "2d",
 		});
 
-		res.cookie("access-token", token, {
-			expires: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-			httpOnly: true,
-			domain: "app.localhost",
-			path: "/",
-			SameSite: null,
-			secure: process.env.NODE_ENV === "production",
-		});
-
+		// Remove the plain text password from the user data to be returned
 		const userToReturn = { ...user._doc };
 		delete userToReturn.password;
 
 		data = { token: token, user: userToReturn, };
 		console.log("Login success");
 		return res.status(200).json(returnSuccess(data));
+
 	} catch (err) {
+
 		console.log(err);
 		return res.status(500).json(returnError(err.message));
+
 	}
 };
 

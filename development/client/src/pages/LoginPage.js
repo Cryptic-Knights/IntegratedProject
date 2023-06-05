@@ -15,7 +15,7 @@ const LoginPage = ({ register }) => {
 	const handleLogin = () => {
 		checklogin(email, password)
 			.then((data) => {
-				window.localStorage.setItem("token", data.data.token);
+				localStorage.setItem("token", data.data.token);
 				window.location.replace("http://localhost:3000/");
 				setErrors("");
 			})
